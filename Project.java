@@ -41,7 +41,7 @@ public class Project {
 				 * 
 				 * */
 				Class.forName("com.mysql.jdbc.Driver");
-				con = DriverManager.getConnection("jdbc:mysql://localhost:"+nLocalPort+"/car_rental", strDbUser, strDbPassword);
+				con = DriverManager.getConnection("jdbc:mysql://localhost:"+nLocalPort+"/car_rental?autoReconnect=true&useSSL=false", strDbUser, strDbPassword);
 
 				/*
 				 * STEP 3
