@@ -51,8 +51,8 @@ CREATE TABLE Rental (
     FOREIGN KEY (car_id) REFERENCES Car (car_id)
 );
 
-//START DATA
-// Catagory TABLE
+/*START DATA*/
+/* Catagory TABLE*/
 insert into Category (type, fee) values ('economy', 30.00);
 insert into Category (type, fee) values ('compact', 40.00);
 insert into Category (type, fee) values ('mid-size', 50.00);
@@ -60,7 +60,7 @@ insert into Category (type, fee) values ('full-size', 60.00);
 insert into Category (type, fee) values ('premium', 70.00);
 insert into Category (type, fee) values ('luxury', 80.00);
 	
-// CLIENT TABLE
+/* CLIENT TABLE*/
 insert into Client (client_code, name, license, phone) values (1, 'Noak Guidetti', 'tVsRn6', '427-719-4294');
 insert into Client (client_code, name, license, phone) values (2, 'Elisha Fife', 'mOu4HkqFF8Q', '774-711-3275');
 insert into Client (client_code, name, license, phone) values (3, 'Kim Digle', 'vOXuDO5Be', '145-323-9951');
@@ -83,7 +83,7 @@ insert into Client (client_code, name, license, phone) values (19, 'Ulrikaumeko 
 insert into Client (client_code, name, license, phone) values (20, 'Perrine O''Rafferty', 'N2WhAMzULnS', '231-280-2505');
 
 
-// MODEL TABLE
+/* MODEL TABLE */
 insert into Model (model_id, name, make, size, year) values (1, 'Ram 2500 Club', 'Dodge', 5125, 1997);
 insert into Model (model_id, name, make, size, year) values (2, 'Town Car', 'Lincoln', 3775, 2011);
 insert into Model (model_id, name, make, size, year) values (3, 'SLK-Class', 'Mercedes-Benz', 1256, 2000);
@@ -186,7 +186,7 @@ insert into Model (model_id, name, make, size, year) values (99, 'Regal', 'Buick
 insert into Model (model_id, name, make, size, year) values (100, 'D150 Club', 'Dodge', 2137, 1993);
 
 
-//Cars TABLE
+/*Cars TABLE*/
 insert into Car (car_id, plate, miles, status, model_id) values (1, 'Un9nD3U', 94422, 'available', 28);
 insert into Car (car_id, plate, miles, status, model_id) values (2, 'zFanckvbie', 88090, 'available', 20);
 insert into Car (car_id, plate, miles, status, model_id) values (3, 'KJtqKkN', 109086, 'available', 11);

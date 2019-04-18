@@ -21,11 +21,11 @@ public class Project {
 				String strSshHost = "onyx.boisestate.edu";          // hostname or ip or SSH server
 				int nSshPort = 22;                                    // remote SSH host port number
 				String strRemoteHost = "localhost";  // hostname or ip of your database server
-				int nLocalPort = 6942;  // local port number use to bind SSH tunnel
+				int nLocalPort = 5949;  // local port number use to bind SSH tunnel
 				
 				String strDbUser = "msandbox";                    // database loging username
-				String strDbPassword = "4434Bsql";                    // database login password
-				int nRemotePort = 6942; // remote port number of your database 
+				String strDbPassword = "gillespie";                    // database login password
+				int nRemotePort = 5949; // remote port number of your database 
 				
 				/*
 				 * STEP 0
