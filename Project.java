@@ -78,6 +78,33 @@ public class Project {
                                     ":" + rs.getString("status"));
                         }
                     }	
+
+                    if (args[0].equals("addNewCar")) {
+                    
+                    }
+
+                    if (args[0].equals("addClient")) {
+                    
+                    }
+
+                    if (args[0].equals("rentCar")) {
+                    
+                    }
+
+                    if (args[0].equals("rentalDetails")) {
+                    
+                    }
+
+                    if (args[0].equals("deleteRental")) {
+                    
+                    } 
+                    
+                    if (args[0].equals("help")) {
+                        help();
+                    }
+                    else {
+                        System.out.println("Invalid command.\n");
+                    }
 		}
 		catch( SQLException e )
 		{
@@ -103,7 +130,7 @@ public class Project {
 		    con.setAutoCommit(true); // restore dafault mode
 		    con.close(); //session.disconnect();
 		}
-	    }
+    	    }
 	}
 	
         private static ResultSet listCars(Connection con) throws SQLException {
@@ -113,10 +140,36 @@ public class Project {
                 Statement stmt = con.createStatement();
 		ResultSet resultSet = stmt.executeQuery(
                         "SELECT plate, miles, M.name, status " +
-                        "FROM Car as C JOIN Model as M on C.model_id=M.model_id");
+                        "FROM Car as C JOIN Model as M on C.model_id=M.model_id " +
+                        "WHERE C.status = 'available'");
 				
 	        con.commit(); //transaction block ends
                 return resultSet;
 
         }
+
+        private static ResultSet addNewCar(Connection con) throws SQLException {
+           return null; 
+        }
+
+        private static ResultSet addNewClient(Connection con) throws SQLException {
+            return null;
+        }
+        
+        private static ResultSet rentCar(Connection con) throws SQLException {
+            return null;
+        }
+
+        private static ResultSet rentalDetails(Connection con) throws SQLException {
+            return null;
+        }
+        
+        private static ResultSet deleteRental(Connection con) throws SQLException {
+            return null;
+        }
+        
+        private static void help() {
+            System.out.println("Help!\n");
+        }
+
 }
