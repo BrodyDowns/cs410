@@ -102,7 +102,7 @@ public class Project {
                     }
                     
                     if (args[0].equals("addClient")) {
-                    
+                        addNewClient(con, args[1], args[2], args[3]);
                     }
 
                     if (args[0].equals("rentCar")) {
@@ -149,50 +149,55 @@ public class Project {
 	}
 	
         private static ResultSet listCars(Connection con) throws SQLException {
-                String sql;
-	        con.setAutoCommit(false);//transaction block starts
-                Statement stmt = con.createStatement();
-		ResultSet resultSet = stmt.executeQuery(
-                        "SELECT plate, miles, M.name, M.make, status " +
-                        "FROM Car as C JOIN Model as M on C.model_id=M.model_id ");
+	    con.setAutoCommit(false);//transaction block starts
+            Statement stmt = con.createStatement();
+	    ResultSet resultSet = stmt.executeQuery(
+                "SELECT plate, miles, M.name, M.make, status " +
+                "FROM Car as C JOIN Model as M on C.model_id=M.model_id ");
 				
-	        con.commit(); //transaction block ends
-                return resultSet;
-
+	    con.commit(); //transaction block ends
+            return resultSet;
         }
 
         private static ResultSet availableCars(Connection con) throws SQLException {
-                String sql;
-	        con.setAutoCommit(false);//transaction block starts
-                Statement stmt = con.createStatement();
-		ResultSet resultSet = stmt.executeQuery(
-                        "SELECT plate, miles, M.name, M.make, status " +
-                        "FROM Car as C JOIN Model as M on C.model_id=M.model_id "+
-                        "WHERE C.status = 'available'");
+	    con.setAutoCommit(false);//transaction block starts
+            Statement stmt = con.createStatement();
+	    ResultSet resultSet = stmt.executeQuery(
+                "SELECT plate, miles, M.name, M.make, status " +
+                "FROM Car as C JOIN Model as M on C.model_id=M.model_id "+
+                "WHERE C.status = 'available'");
 				
-	        con.commit(); //transaction block ends
-                return resultSet;
-
+	    con.commit(); //transaction block ends
+            return resultSet;
         }
 
         private static void addNewCar(Connection con, int model, 
-                String plateNum, int miles) throws SQLException {
-                String sql;
-	        con.setAutoCommit(false);//transaction block starts
-                PreparedStatement stmt = con.prepareStatement(
-                        "INSERT INTO Car (plate, miles, status, model_id) " +
-                        "values(?, ?, ?, ?)");
+            String plateNum, int miles) throws SQLException {
+	    con.setAutoCommit(false);//transaction block starts
+            PreparedStatement stmt = con.prepareStatement(
+                "INSERT INTO Car (plate, miles, status, model_id) " +
+                "values(?, ?, ?, ?)");
 
-                stmt.setString(1, plateNum);
-                stmt.setInt(2, miles);
-                stmt.setString(3, "available");
-                stmt.setInt(4, model);
-                stmt.executeUpdate();
-	        con.commit(); //transaction block ends
+            stmt.setString(1, plateNum);
+            stmt.setInt(2, miles);
+            stmt.setString(3, "available");
+            stmt.setInt(4, model);
+            stmt.executeUpdate();
+	    con.commit(); //transaction block ends
         }
 
-        private static ResultSet addNewClient(Connection con) throws SQLException {
-            return null;
+        private static void addNewClient(Connection con, String name, 
+            String license, String phone) throws SQLException {
+            con.setAutoCommit(false);//transaction block starts
+            PreparedStatement stmt = con.prepareStatement(
+                "INSERT INTO Client (name, license, phone) " +
+                "values(?, ?, ?)");
+
+            stmt.setString(1, name);
+            stmt.setString(2, license);
+            stmt.setString(3, phone);
+            stmt.executeUpdate();
+	    con.commit(); //transaction block ends
         }
         
         private static ResultSet rentCar(Connection con) throws SQLException {
