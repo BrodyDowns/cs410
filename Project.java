@@ -70,19 +70,35 @@ public class Project {
                     {
 		        ResultSet rs = listCars(con);
 			System.out.println("Transaction done!");
-			String results = "";
                         while(rs.next())
                         {
-                            System.out.println(rs.getString("plate") + " : " + 
-                                    rs.getInt("miles") +":"+ rs.getString("M.name") +
-                                    ":" + rs.getString("status"));
+                            System.out.println(
+                                "Make: " + rs.getString("M.make") + "\n" +
+                                "Model: " + rs.getString("M.name") + "\n"+
+                                "Miles: " + rs.getInt("miles") + "\n" +
+                                "Plate#: " + rs.getString("plate") + "\n" + 
+                                "status: " + rs.getString("status") + "\n\n");
                         }
                     }	
+
+                    if (args[0].equals("availableCars")) {
+                        ResultSet rs = listCars(con);
+			System.out.println("Transaction done!");
+                        while(rs.next())
+                        {
+                            System.out.println(
+                                "Make: " + rs.getString("M.make") + "\n" +
+                                "Model: " + rs.getString("M.name") + "\n"+
+                                "Miles: " + rs.getInt("miles") + "\n" +
+                                "Plate#: " + rs.getString("plate") + "\n" + 
+                                "status: " + rs.getString("status") + "\n\n");
+                        }
+                    }
 
                     if (args[0].equals("addNewCar")) {
                     
                     }
-
+                    
                     if (args[0].equals("addClient")) {
                     
                     }
@@ -101,9 +117,6 @@ public class Project {
                     
                     if (args[0].equals("help")) {
                         help();
-                    }
-                    else {
-                        System.out.println("Invalid command.\n");
                     }
 		}
 		catch( SQLException e )
@@ -135,12 +148,24 @@ public class Project {
 	
         private static ResultSet listCars(Connection con) throws SQLException {
                 String sql;
-
 	        con.setAutoCommit(false);//transaction block starts
                 Statement stmt = con.createStatement();
 		ResultSet resultSet = stmt.executeQuery(
-                        "SELECT plate, miles, M.name, status " +
-                        "FROM Car as C JOIN Model as M on C.model_id=M.model_id " +
+                        "SELECT plate, miles, M.name, M.make, status " +
+                        "FROM Car as C JOIN Model as M on C.model_id=M.model_id ");
+				
+	        con.commit(); //transaction block ends
+                return resultSet;
+
+        }
+
+        private static ResultSet availableCars(Connection con) throws SQLException {
+                String sql;
+	        con.setAutoCommit(false);//transaction block starts
+                Statement stmt = con.createStatement();
+		ResultSet resultSet = stmt.executeQuery(
+                        "SELECT plate, miles, M.name, M.make, status " +
+                        "FROM Car as C JOIN Model as M on C.model_id=M.model_id "+
                         "WHERE C.status = 'available'");
 				
 	        con.commit(); //transaction block ends
@@ -148,8 +173,20 @@ public class Project {
 
         }
 
-        private static ResultSet addNewCar(Connection con) throws SQLException {
-           return null; 
+        private static ResultSet addNewCar(Connection con, String model,
+                /*String plateNum, int miles) throws SQLException {
+                String sql;
+	        con.setAutoCommit(false);//transaction block starts
+                Statement stmt = con.createStatement();
+		ResultSet resultSet = stmt.executeQuery(
+                        "INSERT INTO '' " +
+                        "FROM Car as C JOIN Model as M on C.model_id=M.model_id "+
+                        "WHERE C.status = 'available'");
+				
+	        con.commit(); //transaction block ends
+                return resultSet;*/
+
+            return null; 
         }
 
         private static ResultSet addNewClient(Connection con) throws SQLException {
