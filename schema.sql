@@ -34,7 +34,7 @@ CREATE TABLE Car (
     plate varchar(20),
     miles integer,
     status varchar(10),
-    model_id varchar(100),
+    model_id integer,
     FOREIGN KEY (model_id) REFERENCES Model (model_id)
 );
 
