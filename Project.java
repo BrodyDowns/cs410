@@ -96,7 +96,9 @@ public class Project {
                     }
 
                     if (args[0].equals("addNewCar")) {
-                    
+                        int model = Integer.parseInt(args[1]);
+                        int miles = Integer.parseInt(args[3]);
+                        addNewCar(con, model, args[2], miles); 
                     }
                     
                     if (args[0].equals("addClient")) {
@@ -173,20 +175,20 @@ public class Project {
 
         }
 
-        private static ResultSet addNewCar(Connection con, String model,
-                /*String plateNum, int miles) throws SQLException {
+        private static void addNewCar(Connection con, int model, 
+                String plateNum, int miles) throws SQLException {
                 String sql;
 	        con.setAutoCommit(false);//transaction block starts
-                Statement stmt = con.createStatement();
-		ResultSet resultSet = stmt.executeQuery(
-                        "INSERT INTO '' " +
-                        "FROM Car as C JOIN Model as M on C.model_id=M.model_id "+
-                        "WHERE C.status = 'available'");
-				
-	        con.commit(); //transaction block ends
-                return resultSet;*/
+                PreparedStatement stmt = con.prepareStatement(
+                        "INSERT INTO Car (plate, miles, status, model_id) " +
+                        "values(?, ?, ?, ?)");
 
-            return null; 
+                stmt.setString(1, plateNum);
+                stmt.setInt(2, miles);
+                stmt.setString(3, "available");
+                stmt.setInt(4, model);
+                stmt.executeUpdate();
+	        con.commit(); //transaction block ends
         }
 
         private static ResultSet addNewClient(Connection con) throws SQLException {
