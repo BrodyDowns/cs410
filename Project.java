@@ -107,6 +107,12 @@ public class Project {
 
                     if (args[0].equals("rentCar")) {
                     
+                        int client = Integer.parseInt(args[1]);
+                        int carID = Integer.parseInt(args[2]);
+                        int miles = Integer.parseInt(args[5]);
+
+
+                        rentCar(con, client, carID, args[3], args[4], miles, args[6]);
                     }
 
                     if (args[0].equals("rentalDetails")) {
@@ -200,8 +206,26 @@ public class Project {
 	    con.commit(); //transaction block ends
         }
         
-        private static ResultSet rentCar(Connection con) throws SQLException {
-            return null;
+        private static void rentCar(Connection con, int client, int car, 
+            String startDate, String endDate, int miles, String feeType)
+            throws SQLException {
+            con.setAutoCommit(false);//transaction block starts
+            PreparedStatement stmt = con.prepareStatement(
+                "INSERT INTO Rental (client_code, car_id, start_date, end_date, " +
+                    "miles, category_type) " +
+                "SELECT ?, ?, ?, ?, ?, ? " +
+                "WHERE (SELECT status from Car where car_id=?) = 'available';");
+
+            stmt.setInt(1, client);
+            stmt.setInt(2, car);
+            stmt.setString(3, startDate);
+            stmt.setString(4, endDate);
+            stmt.setInt(5, miles);
+            stmt.setString(6, feeType);
+            stmt.executeUpdate();
+	    con.commit(); //transaction block ends
+
+
         }
 
         private static ResultSet rentalDetails(Connection con) throws SQLException {
