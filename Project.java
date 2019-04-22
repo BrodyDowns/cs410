@@ -30,16 +30,16 @@ public class Project {
                     String strRemoteHost = "localhost";
                     
                     // local port number use to bind SSH tunnel
-		    int nLocalPort = 5949;  
+		    int nLocalPort = 6942;
 				
                     // database loging username
 		    String strDbUser = "msandbox";
 
                     // database login password
-		    String strDbPassword = "gillespie";                    
+		    String strDbPassword = "4434Bsql";                    
 		    
                     // remote port number of your database  
-                    int nRemotePort = 5949; 
+                    int nRemotePort = 6942; 
 				
 		    /*
 		    * STEP 0
@@ -116,15 +116,29 @@ public class Project {
                     }
 
                     if (args[0].equals("rentalDetails")) {
-                    
+                        int rentID = Integer.parseInt(args[1]);
+                        ResultSet rs = rentalDetails(con, rentID);
+                        rs.next();
+                        double total = rs.getDouble("Ct.fee") * rs.getInt(8);
+                        System.out.println(
+                            "Client Name: " + rs.getString("Cl.name") + "\n" +
+                            "Client License: " + rs.getString("Cl.license") + "\n"+
+                            "Client Phone: " + rs.getString("Cl.phone") + "\n" +
+                            "Car Plate: " + rs.getString("C.plate") + "\n" + 
+                            "Car Status: " + rs.getString("C.status") + "\n" + 
+                            "Car Model ID: " + rs.getInt("C.model_id") + "\n" + 
+                            "Category Fee: " + rs.getDouble("Ct.fee") + "\n" + 
+                            "Days : " + rs.getInt(8) + "\n" +
+                            "Total Price: " + total  + "\n"
+                        );
                     }
 
                     if (args[0].equals("deleteRental")) {
-                    
+                        deleteRental(con, Integer.parseInt(args[1]));
                     } 
                     
                     if (args[0].equals("help")) {
-                        help();
+                       
                     }
 		}
 		catch( SQLException e )
@@ -253,12 +267,49 @@ public class Project {
 
         }
 
-        private static ResultSet rentalDetails(Connection con) throws SQLException {
-            return null;
+        private static ResultSet rentalDetails(Connection con, int rentID) throws SQLException {
+	    con.setAutoCommit(false);//transaction block starts
+            Statement stmt = con.createStatement();
+	    ResultSet resultSet = stmt.executeQuery(
+                "SELECT Cl.name, Cl.license, Cl.phone, C.plate, C.status, C.model_id, Ct.fee, DATEDIFF(R.end_date,R.start_date)" +
+                "FROM Rental as R JOIN Client as Cl on R.client_code=Cl.client_code " +
+                "JOIN Car as C on R.car_id=C.car_id " +
+                "JOIN Category Ct on R.category_type=Ct.type " +
+                "WHERE R.rental_id =" + rentID
+            );
+
+
+	    con.commit(); //transaction block ends
+            return resultSet;
         }
         
-        private static ResultSet deleteRental(Connection con) throws SQLException {
-            return null;
+        private static void deleteRental(Connection con, int rentID) throws SQLException {
+	    con.setAutoCommit(false);//transaction block starts
+	   
+            Statement stmt = con.createStatement();
+	    ResultSet rs = stmt.executeQuery(
+                "SELECT car_id " +
+                "FROM Rental " +
+                "WHERE rental_id=" + rentID
+            );
+            rs.next();
+            int car_id = rs.getInt("car_id");
+
+            
+            stmt = con.createStatement();
+	    stmt.executeUpdate(
+                "UPDATE Car " +
+                "SET status='available' " +
+                "WHERE car_id=" + car_id
+            );
+
+            stmt = con.createStatement();
+	    stmt.executeUpdate(
+                "DELETE FROM Rental " +
+                "WHERE rental_id=" + rentID
+            );
+
+            con.commit(); //transaction block ends
         }
         
         private static void help() {
