@@ -210,20 +210,45 @@ public class Project {
             String startDate, String endDate, int miles, String feeType)
             throws SQLException {
             con.setAutoCommit(false);//transaction block starts
-            PreparedStatement stmt = con.prepareStatement(
+            PreparedStatement stmt0 = con.prepareStatement(
+                "SELECT status " +
+                "FROM Car " +
+                "WHERE car_id=?;");
+
+            stmt0.setInt(1, car);
+            ResultSet resultSet = stmt0.executeQuery();
+
+            resultSet.next();
+            String result = resultSet.getString("status");
+            System.out.println(result);
+
+            if (result.equals("available")) {
+            
+                 PreparedStatement stmt = con.prepareStatement(
                 "INSERT INTO Rental (client_code, car_id, start_date, end_date, " +
                     "miles, category_type) " +
-                "SELECT ?, ?, ?, ?, ?, ? " +
-                "WHERE (SELECT status from Car where car_id=?) = 'available';");
+                "values (?, ?, ?, ?, ?, ?)");
 
-            stmt.setInt(1, client);
-            stmt.setInt(2, car);
-            stmt.setString(3, startDate);
-            stmt.setString(4, endDate);
-            stmt.setInt(5, miles);
-            stmt.setString(6, feeType);
-            stmt.executeUpdate();
-	    con.commit(); //transaction block ends
+                stmt.setInt(1, client);
+                stmt.setInt(2, car);
+                stmt.setString(3, startDate);
+                stmt.setString(4, endDate);
+                stmt.setInt(5, miles);
+                stmt.setString(6, feeType);
+                stmt.executeUpdate();
+
+
+                PreparedStatement stmt1 = con.prepareStatement(
+                "UPDATE Car " +
+                "SET status='rented' WHERE car_id=?;"
+                );
+                stmt1.setInt(1, car);
+                stmt1.executeUpdate();
+
+            } else {
+                System.out.println("Car not available.");
+            }
+            con.commit(); //transaction block ends
 
 
         }
