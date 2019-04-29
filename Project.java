@@ -2,21 +2,16 @@ import java.io.*;
 import java.sql.*;
 import java.util.*;
 
-import com.jcraft.jsch.*;
 
 public class Project {
     
-    public static void main(String[] args) throws ClassNotFoundException, 
-            JSchException, SQLException {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException {
         
-            if (args.length<0){
-	        System.out.println("Usage DBConnectTest <BroncoUserid> " + 
-                        "<BroncoPassword> msandbox <sandbox password> " + 
-                        "<yourportnumber>");
+            if (args.length<1){
+                help();
             }
 	    else{
                 Connection con = null;
-                Session session = null;
                 Statement stmt = null, stmt2 = null;
                 try
                 {
@@ -81,7 +76,7 @@ public class Project {
                         }
                     }	
 
-                    if (args[0].equals("availableCars")) {
+                    else if (args[0].equals("availableCars")) {
                         ResultSet rs = listCars(con);
 			System.out.println("Transaction done!");
                         while(rs.next())
@@ -95,17 +90,19 @@ public class Project {
                         }
                     }
 
-                    if (args[0].equals("addNewCar")) {
+                    else if (args[0].equals("addNewCar")) {
                         int model = Integer.parseInt(args[1]);
                         int miles = Integer.parseInt(args[3]);
-                        addNewCar(con, model, args[2], miles); 
+                        addNewCar(con, model, args[2], miles);
+                        System.out.println("Car added!");
                     }
                     
-                    if (args[0].equals("addClient")) {
+                    else if (args[0].equals("addClient")) {
                         addNewClient(con, args[1], args[2], args[3]);
+                        System.out.println("Client added!");
                     }
 
-                    if (args[0].equals("rentCar")) {
+                    else if (args[0].equals("rentCar")) {
                     
                         int client = Integer.parseInt(args[1]);
                         int carID = Integer.parseInt(args[2]);
@@ -115,11 +112,11 @@ public class Project {
                         rentCar(con, client, carID, args[3], args[4], miles, args[6]);
                     }
 
-                    if (args[0].equals("rentalDetails")) {
+                    else if (args[0].equals("rentalDetails")) {
                         int rentID = Integer.parseInt(args[1]);
                         ResultSet rs = rentalDetails(con, rentID);
                         rs.next();
-                        double total = rs.getDouble("Ct.fee") * rs.getInt(8);
+                        double total = rs.getDouble("Ct.fee") * (rs.getInt(8)+1);
                         System.out.println(
                             "Client Name: " + rs.getString("Cl.name") + "\n" +
                             "Client License: " + rs.getString("Cl.license") + "\n"+
@@ -128,19 +125,24 @@ public class Project {
                             "Car Status: " + rs.getString("C.status") + "\n" + 
                             "Car Model ID: " + rs.getInt("C.model_id") + "\n" + 
                             "Category Fee: " + rs.getDouble("Ct.fee") + "\n" + 
-                            "Days : " + rs.getInt(8) + "\n" +
+                            "Days : " + (rs.getInt(8)+1) + "\n" +
                             "Total Price: " + total  + "\n"
                         );
                     }
 
-                    if (args[0].equals("deleteRental")) {
+                    else if (args[0].equals("deleteRental")) {
                         deleteRental(con, Integer.parseInt(args[1]));
+                        System.out.println("Rental Deleted");
                     } 
                     
-                    if (args[0].equals("help")) {
-                       
+                    else if (args[0].equals("help")) {
+                        help();
                     }
-		}
+                    else {
+                        System.out.println("Arguments incorrect:");
+                        help();
+                    }
+		} 
 		catch( SQLException e )
 		{
 		    System.out.println(e.getMessage());
@@ -234,7 +236,6 @@ public class Project {
 
             resultSet.next();
             String result = resultSet.getString("status");
-            System.out.println(result);
 
             if (result.equals("available")) {
             
@@ -258,7 +259,7 @@ public class Project {
                 );
                 stmt1.setInt(1, car);
                 stmt1.executeUpdate();
-
+                System.out.println("Available - renting car");
             } else {
                 System.out.println("Car not available.");
             }
@@ -312,8 +313,22 @@ public class Project {
             con.commit(); //transaction block ends
         }
         
-        private static void help() {
-            System.out.println("Help!\n");
-        }
+        private static void help(){
 
+                System.out.println(
+                        "Usage: \n" +
+                        "List all cars: java Project cars \n\n" +
+                        "List all available cars: java Project availableCars \n\n" +
+                        "Add a new car: java Project addNewCar <model id> <plate#> <miles> \n" +
+                        "\tExample: java Project addNewCar 5 a168j8 56443 \n\n" +
+                        "Add new client: java Project addClient <name> <licenseNumber> <phone>\n" +
+                        "\tExample: java Project addClient \"John Doe\" VGW58492 208-555-5555\n\n" +
+                        "Add new rental: java Project rentCar <client id> <car id> <startDate> <endDate> <miles> <feeType>\n" + 
+                        "\tExample: java Project rentCar 20 5 \"2019-04-25\" \"2019-04-29\" 500 compact\n\n" +
+                        "Show Rental Details: java Project rentalDetails <rentalID>\n" +
+                        "\tExample: java Project rentalDetails 2\n\n"+
+                        "Delete Rental: java Project deleteRental <rentalID>\n" +
+                        "\tExample: java Project deleteRental 2\n\n"
+                );
+        }
 }
