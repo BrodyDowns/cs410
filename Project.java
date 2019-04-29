@@ -169,7 +169,11 @@ public class Project {
 		}
     	    }
 	}
-	
+
+        /**
+         * Returns a set of all cars in the Car table
+         *
+         */
         private static ResultSet listCars(Connection con) throws SQLException {
 	    con.setAutoCommit(false);//transaction block starts
             Statement stmt = con.createStatement();
@@ -181,6 +185,9 @@ public class Project {
             return resultSet;
         }
 
+        /**
+         * Returns a set of only available cars in the Car table
+         */
         private static ResultSet availableCars(Connection con) throws SQLException {
 	    con.setAutoCommit(false);//transaction block starts
             Statement stmt = con.createStatement();
@@ -193,6 +200,9 @@ public class Project {
             return resultSet;
         }
 
+        /**
+         * Adds a new Car to the Car table
+         */
         private static void addNewCar(Connection con, int model, 
             String plateNum, int miles) throws SQLException {
 	    con.setAutoCommit(false);//transaction block starts
@@ -208,6 +218,9 @@ public class Project {
 	    con.commit(); //transaction block ends
         }
 
+        /**
+         * Adds a new client to the Client table
+         */
         private static void addNewClient(Connection con, String name, 
             String license, String phone) throws SQLException {
             con.setAutoCommit(false);//transaction block starts
@@ -222,6 +235,10 @@ public class Project {
 	    con.commit(); //transaction block ends
         }
         
+        /**
+         * Adds a new rental to the Rental table, will not add the car if it is
+         * not available
+         */
         private static void rentCar(Connection con, int client, int car, 
             String startDate, String endDate, int miles, String feeType)
             throws SQLException {
@@ -268,6 +285,9 @@ public class Project {
 
         }
 
+        /**
+         * Returns a set containing details about a single rental
+         */
         private static ResultSet rentalDetails(Connection con, int rentID) throws SQLException {
 	    con.setAutoCommit(false);//transaction block starts
             Statement stmt = con.createStatement();
@@ -284,6 +304,9 @@ public class Project {
             return resultSet;
         }
         
+        /**
+         * Deletes a rental from the Rental table
+         */
         private static void deleteRental(Connection con, int rentID) throws SQLException {
 	    con.setAutoCommit(false);//transaction block starts
 	   
@@ -313,6 +336,10 @@ public class Project {
             con.commit(); //transaction block ends
         }
         
+
+        /**
+         * Prints out usage info
+         */
         private static void help(){
 
                 System.out.println(
